@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: onyx
+          POSTGRES_PASSWORD: onyx
+          POSTGRES_DB: onyxcloud
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U onyx" --health-interval=10s --health-timeout=5s --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install API deps
+        working-directory: services/api
+        run: npm install
+      - name: Generate Prisma
+        working-directory: services/api
+        run: npx prisma generate
+      - name: Lint API
+        working-directory: services/api
+        run: npm run lint
+      - name: Install web deps
+        working-directory: apps/web
+        run: npm install
+      - name: Build web
+        working-directory: apps/web
+        run: npm run build

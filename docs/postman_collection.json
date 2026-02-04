@@ -1,0 +1,16 @@
+{
+  "info": {
+    "name": "OnyxCloud API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{api}}/api/auth/register", "host": ["{{api}}"], "path": ["api", "auth", "register"] }
+      }
+    }
+  ]
+}

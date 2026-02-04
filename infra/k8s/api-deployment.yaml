@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onyxcloud-api
+  namespace: onyxcloud
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: onyxcloud-api
+  template:
+    metadata:
+      labels:
+        app: onyxcloud-api
+    spec:
+      containers:
+        - name: api
+          image: onyxcloud-api:latest
+          ports:
+            - containerPort: 4000
+          envFrom:
+            - secretRef:
+                name: onyxcloud-secrets

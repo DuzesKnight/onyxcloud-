@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ServerStatus {
+  PROVISIONING
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  passwordHash    String
+  name            String?
+  role            Role     @default(USER)
+  emailVerifiedAt DateTime?
+  twoFactorSecret String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  sessions        Session[]
+  servers         Server[]
+  invoices        Invoice[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+model Server {
+  id                String       @id @default(cuid())
+  user              User         @relation(fields: [userId], references: [id])
+  userId            String
+  name              String
+  serviceType       String
+  planCode          String
+  status            ServerStatus @default(PROVISIONING)
+  pteroServerId     String?
+  pteroNode         String?
+  ipAddress         String?
+  port              Int?
+  credentials       Json?
+  expiresAt         DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String
+  amount      Int
+  currency    String
+  status      InvoiceStatus @default(PENDING)
+  provider    String
+  providerRef String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
