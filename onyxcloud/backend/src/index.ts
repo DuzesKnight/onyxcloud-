@@ -16,10 +16,10 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60_000, limit: 300 }));
+app.use('/auth', authRoutes);
 app.use(csrf({ cookie: true }));
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
-app.use('/auth', authRoutes);
 app.use('/purchase', auth, purchaseRoutes);
 app.use('/admin', auth, admin, adminRoutes);
 
