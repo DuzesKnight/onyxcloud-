@@ -1,0 +1,1 @@
+{"name":"worker","version":"1.0.0","scripts":{"dev":"tsx src/index.ts","build":"tsc -p tsconfig.json"},"dependencies":{"@prisma/client":"^5.20.0","axios":"^1.7.2","bullmq":"^5.12.9"},"devDependencies":{"tsx":"^4.16.5","typescript":"^5.5.4"}}
